@@ -1,5 +1,19 @@
 # SPARKLE-MOTION
 
+
+
+TODO:
+
+figure out the panning business.
+why doesn't the "adsr" work? am i not setting values at times everywhere?
+
+
+
+
+
+
+
+
 WIP twinkly bell thing
 
 ## WIKI

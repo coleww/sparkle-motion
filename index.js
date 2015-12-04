@@ -25,12 +25,12 @@ module.exports = function (ac, opts) {
   oscillator6.detune.value = Math.random()
 
 
-  var delayA = ac.createDelay(0.322)
+  var delayA = ac.createDelay(0.01322)
 
-  var delayB = ac.createDelay(0.52752313103222)
+  var delayB = ac.createDelay(0.0152752313103222)
 
 
-  var delayC = ac.createDelay(0.7222)
+  var delayC = ac.createDelay(0.017222)
 
 var filterA = ac.createBiquadFilter()
 filterA.Q.value = 12
@@ -80,7 +80,7 @@ filterZ.detune.value = 0
 
 // that one distortion curve that everyone copy pastes from stack overflow anyways
 
-var delayZ = ac.createDelay(0.122)
+var delayZ = ac.createDelay(0.0122)
 
 // make a distortion pedal! yay!
 var distortionZ = ac.createWaveShaper()
