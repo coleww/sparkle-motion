@@ -5,16 +5,16 @@ var synth = require('./')(ac)
 synth.connect(ac.destination)
 
 window.setInterval(function() {
-  synth.update({midiNote: 40 + ~~(Math.random() * 15)}, ac.currentTime)
+  synth.update({midiNote: 50 + ~~(Math.random() * 15)}, ac.currentTime)
   synth.start(ac.currentTime)
-}, 250)
+}, 2500)
 
 window.setInterval(function() {
-  synth.update({midiNote: 30 + ~~(Math.random() * 15)}, ac.currentTime)
+  synth.update({midiNote: 60 + ~~(Math.random() * 15)}, ac.currentTime)
   synth.start(ac.currentTime)
-}, 150)
+}, 1500)
 
 window.setInterval(function() {
   synth.update({midiNote: 70 + ~~(Math.random() * 15)}, ac.currentTime)
   synth.start(ac.currentTime)
-}, 500)
+}, 5500)

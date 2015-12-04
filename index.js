@@ -7,29 +7,35 @@ module.exports = function (ac, opts) {
 
   var oscillator1 = ac.createOscillator(ac)
   oscillator1.type = 'triangle'
+  oscillator1.detune.value = Math.random()
   var oscillator2 = ac.createOscillator(ac)
   oscillator2.type = 'triangle'
+  oscillator2.detune.value = Math.random()
   var oscillator3 = ac.createOscillator(ac)
   oscillator3.type = 'triangle'
+  oscillator3.detune.value = Math.random()
   var oscillator4 = ac.createOscillator(ac)
   oscillator4.type = 'triangle'
+  oscillator4.detune.value = Math.random()
   var oscillator5 = ac.createOscillator(ac)
   oscillator5.type = 'sine'
+  oscillator5.detune.value = Math.random()
   var oscillator6 = ac.createOscillator(ac)
   oscillator6.type = 'sine'
+  oscillator6.detune.value = Math.random()
 
 
   var delayA = ac.createDelay(0.322)
 
-  var delayB = ac.createDelay(0.2752313103222)
+  var delayB = ac.createDelay(0.52752313103222)
 
 
-  var delayC = ac.createDelay(0.222)
+  var delayC = ac.createDelay(0.7222)
 
 var filterA = ac.createBiquadFilter()
-filterA.Q.value = 7
+filterA.Q.value = 12
 filterA.type = 'highpass' // 'highpass', 'bandpass', 'highpass', 'lowshelf', 'highshelf', 'peaking', 'notch', 'allpass'
-filterA.detune.value = 0
+filterA.detune.value = Math.random()
 
 
 // that one distortion curve that everyone copy pastes from stack overflow anyways
@@ -39,9 +45,9 @@ var distortionA = ac.createWaveShaper()
 distortionA.curve = makeDistortionCurve(100)
 
 var filterB = ac.createBiquadFilter()
-filterB.Q.value = 7
+filterB.Q.value = 12
 filterB.type = 'highpass' // 'highpass', 'bandpass', 'highpass', 'lowshelf', 'highshelf', 'peaking', 'notch', 'allpass'
-filterB.detune.value = 0
+filterB.detune.value = Math.random()
 
 // that one distortion curve that everyone copy pastes from stack overflow anyways
 
@@ -51,7 +57,7 @@ distortionB.curve = makeDistortionCurve(100)
 
 var filterC = ac.createBiquadFilter()
 filterC.Q.value = 7
-filterC.type = 'highpass' // 'highpass', 'bandpass', 'highpass', 'lowshelf', 'highshelf', 'peaking', 'notch', 'allpass'
+filterC.type = 'lowpass' // 'highpass', 'bandpass', 'highpass', 'lowshelf', 'highshelf', 'peaking', 'notch', 'allpass'
 filterC.detune.value = 0
 
 // that one distortion curve that everyone copy pastes from stack overflow anyways
@@ -96,7 +102,7 @@ distortionZ.curve = makeDistortionCurve(100)
   panR.pan.value = 0.15
 
   var volume = ac.createGain()
-  volume.gain.value = 0.75
+  volume.gain.value = 0
 
   //  START OF CHAIN (NOT MARKOV)
 
@@ -152,9 +158,9 @@ distortionZ.curve = makeDistortionCurve(100)
   // ...
 
   audioNodes.settings = {
-    attack: 0.1,
+    attack: 0.01,
     decay: 0.05,
-    sustain: 0.3,
+    sustain: 0.4,
     release: 0.1,
     arpeggio: false, // lol jk not yet, lazy
     chord: 'maj7' // or maybe 'pentMin5' ? how does science?
@@ -205,10 +211,10 @@ distortionZ.curve = makeDistortionCurve(100)
           audioNodes.oscillator5.frequency.setValueAtTime(freq, when)
           audioNodes.oscillator6.frequency.setValueAtTime(freq, when)
 
-          // filterA.frequency.setValueAtTime(, ac.currentTime)
-          // filterB.frequency.setValueAtTime(, ac.currentTime)
-          // filterC.frequency.setValueAtTime(, ac.currentTime)
-          // filterZ.frequency.setValueAtTime(, ac.currentTime)
+          filterA.frequency.setValueAtTime(freq / (2 + Math.random()), when)
+          filterB.frequency.setValueAtTime(freq / (2 + Math.random()), when)
+          filterC.frequency.setValueAtTime(freq / (Math.random()), when)
+          filterZ.frequency.setValueAtTime(freq / (1.5 + Math.random()), when)
 
 
         } else {
