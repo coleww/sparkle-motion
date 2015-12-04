@@ -15,5 +15,23 @@
   "dependencies": {
     "make-distortion-curve": "^1.0.0",
     "midiutils": "0.0.4"
-  }
+  },
+  "name": "sparkle-motion",
+  "description": "WIP twinkly bell thing",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/wham-js/sparkle-motion.git"
+  },
+  "keywords": [
+    "web audio",
+    "sparkle motion",
+    "synth",
+    "bell"
+  ],
+  "author": "Cole Willsea <coleww@gmail.com> (http://colewillsea.com/)",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/wham-js/sparkle-motion/issues"
+  },
+  "homepage": "https://github.com/wham-js/sparkle-motion#readme"
 }
