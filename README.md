@@ -1,20 +1,6 @@
 # SPARKLE-MOTION
 
-
-
-TODO:
-
-figure out the panning business.
-why doesn't the "adsr" work? am i not setting values at times everywhere?
-
-
-
-
-
-
-
-
-WIP twinkly bell thing
+twinkly bell thing
 
 ## WIKI
 
@@ -28,7 +14,7 @@ var sparkle = require('sparkle-motion')(ac)
 sparkle.connect(ac.destination)
 
 // set the frequency/ADSR
-sparkle.update({midiNote: 72, attack: 0.3, decay: 0.1, sustain: 0.3, release: 0.5})
+sparkle.update({midiNote: 72, attack: 0.3, decay: 0.1, sustain: 0.3, release: 0.5, peak: 0.3, mid: 0.1, lfoL: 0.3, lfoR: 0.6})
 // and trigger it!
 sparkle.start(ac.currentTime)
 

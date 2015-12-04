@@ -1,5 +1,6 @@
 var makeDistortionCurve = require('make-distortion-curve')
 var MIDIUtils = require('midiutils')
+var adsr = require('a-d-s-r')
 // yr function should accept an audioContext, and optional params/opts
 module.exports = function (ac, opts) {
   // make some audioNodes, connect them, store them on the object
@@ -12,11 +13,12 @@ module.exports = function (ac, opts) {
   oscillator2.type = 'triangle'
   oscillator2.detune.value = Math.random()
   var oscillator3 = ac.createOscillator(ac)
-  oscillator3.type = 'triangle'
+  oscillator3.type = 'sawtooth'
   oscillator3.detune.value = Math.random()
   var oscillator4 = ac.createOscillator(ac)
   oscillator4.type = 'triangle'
   oscillator4.detune.value = Math.random()
+
   var oscillator5 = ac.createOscillator(ac)
   oscillator5.type = 'sine'
   oscillator5.detune.value = Math.random()
@@ -34,7 +36,7 @@ module.exports = function (ac, opts) {
 
 var filterA = ac.createBiquadFilter()
 filterA.Q.value = 12
-filterA.type = 'highpass' // 'highpass', 'bandpass', 'highpass', 'lowshelf', 'highshelf', 'peaking', 'notch', 'allpass'
+filterA.type = 'highpass'
 filterA.detune.value = Math.random()
 
 
@@ -46,7 +48,7 @@ distortionA.curve = makeDistortionCurve(100)
 
 var filterB = ac.createBiquadFilter()
 filterB.Q.value = 12
-filterB.type = 'highpass' // 'highpass', 'bandpass', 'highpass', 'lowshelf', 'highshelf', 'peaking', 'notch', 'allpass'
+filterB.type = 'highpass'
 filterB.detune.value = Math.random()
 
 // that one distortion curve that everyone copy pastes from stack overflow anyways
@@ -57,8 +59,8 @@ distortionB.curve = makeDistortionCurve(100)
 
 var filterC = ac.createBiquadFilter()
 filterC.Q.value = 7
-filterC.type = 'lowpass' // 'highpass', 'bandpass', 'highpass', 'lowshelf', 'highshelf', 'peaking', 'notch', 'allpass'
-filterC.detune.value = 0
+filterC.type = 'lowpass'
+filterC.detune.value = Math.random()
 
 // that one distortion curve that everyone copy pastes from stack overflow anyways
 
@@ -68,15 +70,21 @@ distortionC.curve = makeDistortionCurve(100)
 
 
 
-
-
+var gainA = ac.createGain()
+gainA.gain.value = 0.333333333333333
+var gainB = ac.createGain()
+gainB.gain.value = 0.333333333333333
+var gainC = ac.createGain()
+gainC.gain.value = 0.333333333333333
+var gainZ = ac.createGain()
+gainZ.gain.value = 0.5
 
 
 
 var filterZ = ac.createBiquadFilter()
 filterZ.Q.value = 12
-filterZ.type = 'highshelf' // 'highpass', 'bandpass', 'highpass', 'lowshelf', 'highshelf', 'peaking', 'notch', 'allpass'
-filterZ.detune.value = 0
+filterZ.type = 'highshelf'
+filterZ.detune.value = Math.random()
 
 // that one distortion curve that everyone copy pastes from stack overflow anyways
 
@@ -86,20 +94,6 @@ var delayZ = ac.createDelay(0.0122)
 var distortionZ = ac.createWaveShaper()
 distortionZ.curve = makeDistortionCurve(100)
 
-  // SOMEONE
-  // SHOULD
-  // MAKE
-  // A
-  // MODULE
-  // THAT
-  // JUST
-  // MIXES
-  // STUFF
-  // PLZ.
-  var panL = ac.createStereoPanner()
-  panL.pan.value = -0.15
-  var panR = ac.createStereoPanner()
-  panR.pan.value = 0.15
 
   var volume = ac.createGain()
   volume.gain.setValueAtTime(0, ac.currentTime)
@@ -107,10 +101,15 @@ distortionZ.curve = makeDistortionCurve(100)
   //  START OF CHAIN (NOT MARKOV)
 
   oscillator1.connect(delayA)
-  oscillator5.connect(delayA)
+
+  oscillator5.connect(filterA.frequency)
+  oscillator5.connect(gainZ.gain)
+  oscillator5.frequency.value = 0.133
 
   oscillator4.connect(delayB)
-  oscillator6.connect(delayB)
+  oscillator6.connect(filterB.frequency)
+  oscillator6.connect(gainC.gain)
+  oscillator6.frequency.value = 0.273
 
   oscillator2.connect(delayC)
   oscillator3.connect(delayC)
@@ -118,33 +117,34 @@ distortionZ.curve = makeDistortionCurve(100)
   delayA.connect(filterA)
   delayB.connect(filterB)
   delayC.connect(filterC)
-  filterA.connect(distortionA)
-  filterB.connect(distortionB)
-  filterC.connect(distortionC)
-  oscillator1.connect(distortionA)
-  oscillator5.connect(distortionA)
 
-  oscillator4.connect(distortionB)
-  oscillator6.connect(distortionB)
+  filterA.connect(gainA)
+  filterB.connect(gainB)
+  filterC.connect(gainC)
 
-  oscillator2.connect(distortionC)
-  oscillator3.connect(distortionC)
+  oscillator1.connect(gainA)
+  oscillator5.connect(gainA)
 
+  oscillator4.connect(gainB)
+  oscillator6.connect(gainB)
 
+  oscillator2.connect(gainC)
+  oscillator3.connect(gainC)
+
+  gainA.connect(distortionA)
+  gainB.connect(distortionB)
+  gainC.connect(distortionC)
 
   distortionC.connect(delayZ)
   delayZ.connect(filterZ)
-  distortionC.connect(distortionZ)
-  filterZ.connect(distortionZ)
+  distortionC.connect(gainZ)
+  filterZ.connect(gainZ)
+  gainZ.connect(distortionZ)
 
-// DELAYS FOR THE DELAY GOD!
-// REVERB UNTO THE REVERB GODDESS!
-  panL.connect(volume)
-  panR.connect(volume)
+  distortionA.connect(volume)
+  distortionB.connect(volume)
   distortionZ.connect(volume)
   // END OF CHAIN
-
-
 
   audioNodes.oscillator1 = oscillator1
   audioNodes.oscillator2 = oscillator2
@@ -154,38 +154,43 @@ distortionZ.curve = makeDistortionCurve(100)
   audioNodes.oscillator6 = oscillator6
   audioNodes.delayA = delayA
   audioNodes.delayB = delayB
+  audioNodes.delayC = delayC
+  audioNodes.delayZ = delayZ
+  audioNodes.gainA = gainA
+  audioNodes.gainB = gainB
+  audioNodes.gainC = gainC
+  audioNodes.filterA = filterA
+  audioNodes.filterB = filterB
+  audioNodes.filterC = filterC
+  audioNodes.filterZ = filterZ
+  audioNodes.distortionA = distortionA
+  audioNodes.distortionB = distortionB
+  audioNodes.distortionC = distortionC
+  audioNodes.distortionZ = distortionZ
   audioNodes.volume = volume
-  // ...
-
   audioNodes.settings = {
     attack: 0.01,
     decay: 0.05,
     sustain: 0.4,
     release: 0.1,
-    arpeggio: false, // lol jk not yet, lazy
-    chord: 'maj7' // or maybe 'pentMin5' ? how does science?
-
+    peak: 0.3,
+    mid: 0.1
   }
 
- oscillator1.start(ac.currentTime)
- oscillator2.start(ac.currentTime)
- oscillator3.start(ac.currentTime)
- oscillator4.start(ac.currentTime)
- oscillator5.start(ac.currentTime)
- oscillator6.start(ac.currentTime)
+  // bzzzzz
+  oscillator1.start(ac.currentTime)
+  oscillator2.start(ac.currentTime)
+  oscillator3.start(ac.currentTime)
+  oscillator4.start(ac.currentTime)
+  oscillator5.start(ac.currentTime)
+  oscillator6.start(ac.currentTime)
 
   return {
     connect: function (input) {
-      // TODO: HOW 2 STEREO
-        audioNodes.volume.connect(input)
+      audioNodes.volume.connect(input)
     },
     start: function (when) {
-      // FAKE ADSR
-      // NOT SCIENTIFIC
-      // WIKIPEDIA? IDK, W/E
-      audioNodes.volume.gain.linearRampToValueAtTime(audioNodes.settings.sustain + 0.2, when + audioNodes.settings.attack)
-      audioNodes.volume.gain.linearRampToValueAtTime(audioNodes.settings.sustain, when + audioNodes.settings.decay)
-      audioNodes.volume.gain.linearRampToValueAtTime(0, when + audioNodes.settings.release)
+      adsr(audioNodes.volume, when, audioNodes.settings)
     },
     stop: function (when) {
       console.log('SOMETIMES I DOUBT YR COMMITMENT 2 SPARKLE MOTION\np.s. yr oscillators are destroyed, make a new synth plz')
@@ -198,7 +203,7 @@ distortionZ.curve = makeDistortionCurve(100)
     },
     update: function (opts, when) {
       // available opts:
-      // {midiNote: 62, attack: , decay: , sustain: , release: }
+      // {midiNote: 62, lfoL: , lfoR: , freq, attack: , decay: , sustain: , release: , peak: , mid:}
       Object.keys(opts).forEach(function (k) {
         var v = opts[k]
         if (k == 'midiNote' || k == 'freq') {
@@ -208,34 +213,21 @@ distortionZ.curve = makeDistortionCurve(100)
           audioNodes.oscillator2.frequency.setValueAtTime(freq, when)
           audioNodes.oscillator3.frequency.setValueAtTime(freq, when)
           audioNodes.oscillator4.frequency.setValueAtTime(freq, when)
-          audioNodes.oscillator5.frequency.setValueAtTime(freq, when)
-          audioNodes.oscillator6.frequency.setValueAtTime(freq, when)
 
           filterA.frequency.setValueAtTime(freq / (2 + Math.random()), when)
           filterB.frequency.setValueAtTime(freq / (2 + Math.random()), when)
           filterC.frequency.setValueAtTime(freq / (Math.random()), when)
           filterZ.frequency.setValueAtTime(freq / (1.5 + Math.random()), when)
 
-
+        } else if (k == 'lfoL' || k == 'lfoR') {
+          var node = k == 'lfoL' ? audioNodes.oscillator5 : audioNodes.oscillator6
+          node.frequency.setValueAtTime(v, when)
         } else {
           // just an ADSR value
           audioNodes.settings[k] = v
         }
       })
     },
-    // import: function (opts) {
-    //   // optional: sets opts data on all audioNodes at ac.currentTime
-    //   Object.keys(opts).forEach(function (k) {
-    //     var v = opts[k]
-    //     // ????
-    //   })
-    // },
-    // export: function () {
-    //   // optional: returns object representation of the instruments current attributes, to be passed as opts to it's constructor or import function
-    //   return {
-    //     // ????
-    //   }
-    // },
     nodes: function () {
       // returns an object of `{stringKey: audioNode}` for raw manipulation
       return audioNodes
