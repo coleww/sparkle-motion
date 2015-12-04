@@ -174,7 +174,8 @@ distortionZ.curve = makeDistortionCurve(100)
     sustain: 0.4,
     release: 0.1,
     peak: 0.3,
-    mid: 0.1
+    mid: 0.1,
+    end: 0.00000000000001 // lol idk wtf
   }
 
   // bzzzzz
