@@ -102,7 +102,7 @@ distortionZ.curve = makeDistortionCurve(100)
   panR.pan.value = 0.15
 
   var volume = ac.createGain()
-  volume.gain.value = 0
+  volume.gain.setValueAtTime(0, ac.currentTime)
 
   //  START OF CHAIN (NOT MARKOV)
 
