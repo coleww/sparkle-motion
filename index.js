@@ -1,4 +1,5 @@
 var makeDistortionCurve = require('make-distortion-curve')
+var MIDIUtils = require('midiutils')
 // yr function should accept an audioContext, and optional params/opts
 module.exports = function (ac, opts) {
   // make some audioNodes, connect them, store them on the object
@@ -18,17 +19,18 @@ module.exports = function (ac, opts) {
   oscillator6.type = 'sine'
 
 
-  var delayA = ac.createDelay(0.222)
+  var delayA = ac.createDelay(0.322)
 
-  var delayB = ac.createDelay(0.222)
+  var delayB = ac.createDelay(0.2752313103222)
 
 
   var delayC = ac.createDelay(0.222)
 
 var filterA = ac.createBiquadFilter()
-filterA.Q.value = 5
-filterA.type = 'lowpass' // 'highpass', 'bandpass', 'lowpass', 'lowshelf', 'highshelf', 'peaking', 'notch', 'allpass'
+filterA.Q.value = 7
+filterA.type = 'highpass' // 'highpass', 'bandpass', 'highpass', 'lowshelf', 'highshelf', 'peaking', 'notch', 'allpass'
 filterA.detune.value = 0
+
 
 // that one distortion curve that everyone copy pastes from stack overflow anyways
 
@@ -37,8 +39,8 @@ var distortionA = ac.createWaveShaper()
 distortionA.curve = makeDistortionCurve(100)
 
 var filterB = ac.createBiquadFilter()
-filterB.Q.value = 5
-filterB.type = 'lowpass' // 'highpass', 'bandpass', 'lowpass', 'lowshelf', 'highshelf', 'peaking', 'notch', 'allpass'
+filterB.Q.value = 7
+filterB.type = 'highpass' // 'highpass', 'bandpass', 'highpass', 'lowshelf', 'highshelf', 'peaking', 'notch', 'allpass'
 filterB.detune.value = 0
 
 // that one distortion curve that everyone copy pastes from stack overflow anyways
@@ -48,8 +50,8 @@ var distortionB = ac.createWaveShaper()
 distortionB.curve = makeDistortionCurve(100)
 
 var filterC = ac.createBiquadFilter()
-filterC.Q.value = 5
-filterC.type = 'lowpass' // 'highpass', 'bandpass', 'lowpass', 'lowshelf', 'highshelf', 'peaking', 'notch', 'allpass'
+filterC.Q.value = 7
+filterC.type = 'highpass' // 'highpass', 'bandpass', 'highpass', 'lowshelf', 'highshelf', 'peaking', 'notch', 'allpass'
 filterC.detune.value = 0
 
 // that one distortion curve that everyone copy pastes from stack overflow anyways
@@ -66,8 +68,8 @@ distortionC.curve = makeDistortionCurve(100)
 
 
 var filterZ = ac.createBiquadFilter()
-filterZ.Q.value = 5
-filterZ.type = 'lowpass' // 'highpass', 'bandpass', 'lowpass', 'lowshelf', 'highshelf', 'peaking', 'notch', 'allpass'
+filterZ.Q.value = 12
+filterZ.type = 'highshelf' // 'highpass', 'bandpass', 'highpass', 'lowshelf', 'highshelf', 'peaking', 'notch', 'allpass'
 filterZ.detune.value = 0
 
 // that one distortion curve that everyone copy pastes from stack overflow anyways
@@ -202,6 +204,13 @@ distortionZ.curve = makeDistortionCurve(100)
           audioNodes.oscillator4.frequency.setValueAtTime(freq, when)
           audioNodes.oscillator5.frequency.setValueAtTime(freq, when)
           audioNodes.oscillator6.frequency.setValueAtTime(freq, when)
+
+          // filterA.frequency.setValueAtTime(, ac.currentTime)
+          // filterB.frequency.setValueAtTime(, ac.currentTime)
+          // filterC.frequency.setValueAtTime(, ac.currentTime)
+          // filterZ.frequency.setValueAtTime(, ac.currentTime)
+
+
         } else {
           // just an ADSR value
           audioNodes.settings[k] = v
